@@ -7,10 +7,12 @@ export default class Product {
     created_at?: Date;
     updated_at?: Date;
 
-    constructor(nm_product:string, cd_product:string, status:number, sku:string){
+    constructor( nm_product:string, cd_product:string, status:number, sku:string, id?: number){
+        this.id = id;
         this.nm_product = nm_product;
         this.cd_product = cd_product;
         this.status = status;
         this.sku = sku;
     }
+
 }
