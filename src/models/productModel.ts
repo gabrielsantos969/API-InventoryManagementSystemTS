@@ -41,6 +41,23 @@ const getProductById = async (id: number): Promise<Product[] | null> => {
 
 }
 
+const getProductByCode = async (code: string): Promise<Product[] | null> => {
+
+    const [rows] = await con.promise().query<ProductRow[]>(`SELECT * FROM product WHERE cd_product LIKE '%${code}%'`);
+
+    if(rows.length > 0){
+        return rows.map(row => {
+            const product = new Product(row.nm_product, row.cd_product, row.status, row.sku, row.id);
+            product.created_at = row.created_at;
+            product.updated_at = row.updated_at;
+            return product;
+        })
+    }
+
+    return null;
+
+}
+
 const createProduct = async (data:Product): Promise<void> => {
 
     const values = [data.nm_product, data.cd_product, data.status, data.sku];
@@ -48,4 +65,4 @@ const createProduct = async (data:Product): Promise<void> => {
 
 }
 
-export { getAllProducts, getProductById, createProduct, Product }; 
+export { getAllProducts, getProductById, createProduct, getProductByCode, Product }; 

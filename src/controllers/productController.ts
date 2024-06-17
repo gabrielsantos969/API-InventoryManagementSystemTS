@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import sendResponse from "../utils/sendResponse";
-import { createProduct, getAllProducts, getProductById } from "../models/productModel";
+import { createProduct, getAllProducts, getProductByCode, getProductById } from "../models/productModel";
 
 async function getProducts(req: Request, res: Response): Promise<void> {
   
@@ -141,10 +141,71 @@ async function productCreate(req:Request, res:Response) {
             })
         }
 
+    }
+
+}
+
+async function getProductCode(req:Request, res:Response) {
+    
+    let message;
+    const {
+        code
+    } = req.params;
+
+    try {
+
+        if(code.length == 0 || code == null){
+            message = "It is necessary to enter a value other than null.";
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 422,
+                message: message
+            })
+        }
+
+        const product = await getProductByCode(code);
+
+        if(product){
+            message = `Product Code: ${code} found.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 200,
+                message: message,
+                data: product
+            });
+        }else{
+            message = `Product Code: '${code}' not found!`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 404,
+                message: message
+            })
+        }
+
+        
+    } catch (err) {
+        let errorMessage = 'An unknown error occurred';
+
+        if(err instanceof Error){
+            errorMessage = err.message;
+        }
+  
+        message = 'Error when trying to list to Code Product.';
+
+        sendResponse({
+            res,
+            success: true,
+            statusCode: 500,
+            message: message,
+            error: errorMessage
+        })
         
 
     }
 
 }
 
-export { getProducts, getProductId, productCreate };
+export { getProducts, getProductId, productCreate, getProductCode };
