@@ -10,8 +10,7 @@ const getAllProducts = async (): Promise<Product[] | null> => {
     if(rows.length > 0){
         
         return rows.map(row => {
-            const product = new Product(row.nm_product, row.cd_product, row.status, row.sku);
-            product.id = row.id;
+            const product = new Product(row.nm_product, row.cd_product, row.status, row.sku, Number(row.id));
             product.created_at = row.created_at;
             product.updated_at = row.updated_at;
             return product;
@@ -23,4 +22,23 @@ const getAllProducts = async (): Promise<Product[] | null> => {
 
 }
 
-export { getAllProducts, Product }; 
+const getProductById = async (id: number): Promise<Product[] | null> => {
+
+    const [rows] = await con.promise().query<ProductRow[]>("SELECT * FROM product WHERE id=?", [id]);
+
+    if(rows.length > 0){
+
+        return rows.map(row => {
+            const product = new Product(row.nm_product, row.cd_product, row.status, row.sku, Number(row.id));
+            product.created_at = row.created_at;
+            product.updated_at = row.updated_at;
+            return product;
+        })
+
+    }
+
+    return null;
+
+}
+
+export { getAllProducts, getProductById, Product }; 
