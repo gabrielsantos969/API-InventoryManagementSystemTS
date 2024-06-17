@@ -41,4 +41,11 @@ const getProductById = async (id: number): Promise<Product[] | null> => {
 
 }
 
-export { getAllProducts, getProductById, Product }; 
+const createProduct = async (data:Product): Promise<void> => {
+
+    const values = [data.nm_product, data.cd_product, data.status, data.sku];
+    await con.promise().query("INSERT INTO product (nm_product, cd_product, status, sku) VALUES (?, ?, ?, ?)", values);
+
+}
+
+export { getAllProducts, getProductById, createProduct, Product }; 
