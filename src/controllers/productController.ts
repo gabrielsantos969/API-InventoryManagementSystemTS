@@ -156,7 +156,7 @@ async function getProductCode(req:Request, res:Response) {
 
         sendResponse({
             res,
-            success: true,
+            success: false,
             statusCode: 500,
             message: message,
             error: errorMessage
@@ -265,7 +265,7 @@ async function productCreate(req:Request, res:Response) {
 
             sendResponse({
                 res,
-                success: true,
+                success: false,
                 statusCode: 500,
                 message: message,
                 error: errorMessage
@@ -336,7 +336,7 @@ async function productUpdate(req: Request, res: Response) {
 
             sendResponse({
                 res,
-                success: true,
+                success: false,
                 statusCode: 500,
                 message: message,
                 error: errorMessage
@@ -389,7 +389,7 @@ async function productDelete(req: Request, res: Response) {
 
         sendResponse({
             res,
-            success: true,
+            success: false,
             statusCode: 500,
             message: message,
             error: errorMessage
