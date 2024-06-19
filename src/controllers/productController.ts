@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import sendResponse from "../utils/sendResponse";
-import { createProduct, getAllProducts, getProductByCode, getProductById, updateProduct } from "../models/productModel";
+import { createProduct, deleteProduct, getAllProducts, getProductByCode, getProductById, updateProduct } from "../models/productModel";
 
 async function getProducts(req: Request, res: Response): Promise<void> {
   
@@ -247,8 +247,6 @@ async function productUpdate(req: Request, res: Response) {
         let errorMessage = 'An unknown error occurred';
         let errorCode:string | undefined;
 
-        console.error(err)
-
         if(err instanceof Error){
             errorMessage = err.message;
             if('code' in err){
@@ -266,7 +264,7 @@ async function productUpdate(req: Request, res: Response) {
                 error: errorMessage
             })
         }else{
-            message = 'Error when trying to list update Product.';
+            message = 'Error when trying to update Product.';
 
             sendResponse({
                 res,
@@ -280,4 +278,57 @@ async function productUpdate(req: Request, res: Response) {
 
 }
 
-export { getProducts, getProductId, productCreate, getProductCode, productUpdate };
+async function productDelete(req: Request, res: Response) {
+
+    let message;
+    const {
+        id
+    } = req.params;
+
+    try {
+
+        const product = await getProductById(Number(id));
+
+        if(product) {
+            await deleteProduct(Number(id));
+
+            message = `Product ID: ${id} deleted.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 200,
+                message: message
+            })
+        }else {
+            message = `Product ID: ${id} not found.`;
+            sendResponse({
+                res, 
+                success: true,
+                statusCode: 404,
+                message: message
+            });
+        }
+        
+    } catch (err) {
+
+        let errorMessage = 'An unknown error occurred';
+
+        if(err instanceof Error){
+            errorMessage = err.message;
+        }
+
+        message = 'Error when trying to delete Product.';
+
+        sendResponse({
+            res,
+            success: true,
+            statusCode: 500,
+            message: message,
+            error: errorMessage
+        })
+        
+    }
+
+}
+
+export { getProducts, getProductId, productCreate, getProductCode, productUpdate, productDelete };

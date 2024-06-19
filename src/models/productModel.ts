@@ -100,4 +100,10 @@ const updateProduct = async (id:number, data: Product): Promise<void> => {
 
 }
 
-export { getAllProducts, getProductById, createProduct, getProductByCode, updateProduct, Product }; 
+const deleteProduct = async (id: number): Promise<void> => {
+
+    await con.promise().query("DELETE FROM product WHERE id=?", [id]);
+
+}
+
+export { getAllProducts, getProductById, createProduct, getProductByCode, updateProduct, deleteProduct, Product }; 
