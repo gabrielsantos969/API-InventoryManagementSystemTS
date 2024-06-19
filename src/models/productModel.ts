@@ -65,4 +65,39 @@ const createProduct = async (data:Product): Promise<void> => {
 
 }
 
-export { getAllProducts, getProductById, createProduct, getProductByCode, Product }; 
+
+const updateProduct = async (id:number, data: Product): Promise<void> => {
+
+    const setClause = [];
+    const values = [];
+
+    if(data.nm_product){
+        setClause.push("nm_product = ?");
+        values.push(data.nm_product);
+    }
+    if(data.cd_product){
+        setClause.push("cd_product = ?");
+        values.push(data.cd_product);
+    }
+    if(data.status){
+        setClause.push("status = ?");
+        values.push(data.status);
+    }
+    if(data.sku){
+        setClause.push("sku = ?");
+        values.push(data.sku);
+    }
+
+    if(setClause.length === 0){
+        throw new Error("No data was provided to update the product.");
+    }
+
+    const sql = `UPDATE product SET ${setClause.join(", ")} WHERE id=?`;
+
+    values.push(id);
+
+    await con.promise().query(sql, values);
+
+}
+
+export { getAllProducts, getProductById, createProduct, getProductByCode, updateProduct, Product }; 

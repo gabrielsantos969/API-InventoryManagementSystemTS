@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import sendResponse from "../utils/sendResponse";
-import { createProduct, getAllProducts, getProductByCode, getProductById } from "../models/productModel";
+import { createProduct, getAllProducts, getProductByCode, getProductById, updateProduct } from "../models/productModel";
 
 async function getProducts(req: Request, res: Response): Promise<void> {
   
@@ -208,4 +208,76 @@ async function getProductCode(req:Request, res:Response) {
 
 }
 
-export { getProducts, getProductId, productCreate, getProductCode };
+async function productUpdate(req: Request, res: Response) {
+
+    let message;
+    const {
+        data
+    } = req.body;
+
+    const {id} = req.params;
+
+    try {
+
+        const product = await getProductById(Number(id));
+
+        if(product) {
+            await updateProduct(Number(id), data);
+
+            message = `Product ID: ${id} updated.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 200,
+                message: message
+            })
+        }else {
+            message = `Product ID: ${id} not found.`;
+            sendResponse({
+                res, 
+                success: true,
+                statusCode: 404,
+                message: message
+            });
+        }
+
+        
+        
+    } catch (err) {
+        let errorMessage = 'An unknown error occurred';
+        let errorCode:string | undefined;
+
+        console.error(err)
+
+        if(err instanceof Error){
+            errorMessage = err.message;
+            if('code' in err){
+                errorCode = (err as any).code;
+            }
+        }
+
+        if(errorCode === 'ER_DUP_ENTRY') {
+            message = 'Duplication error when registering the product.';
+            sendResponse({
+                res,
+                success: false,
+                statusCode: 500,
+                message: message,
+                error: errorMessage
+            })
+        }else{
+            message = 'Error when trying to list update Product.';
+
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 500,
+                message: message,
+                error: errorMessage
+            })
+        }
+    }
+
+}
+
+export { getProducts, getProductId, productCreate, getProductCode, productUpdate };
