@@ -1,19 +1,35 @@
 import { Request, Response } from "express";
 import sendResponse from "../utils/sendResponse";
-import { createProduct, deleteProduct, getAllProducts, getProductByCode, getProductById, getProductByName, updateProduct } from "../models/productModel";
+import { createProduct, deleteProduct, getAllProducts, getProductByCode, getProductById, getProductByName, getTotalProducts, updateProduct } from "../models/productModel";
 
 async function getProducts(req: Request, res: Response): Promise<void> {
   
     let message;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 50; 
 
     try {
         
-        const products = await getAllProducts();
+        const products = await getAllProducts(page, limit);
+        const total = await getTotalProducts();
+
+        const totalPages = Math.ceil(total / limit);
+        const nextPage = page < totalPages ? page + 1 : null;
+        const prevPage = page > 1 ? page - 1 : null;
 
         if(products){
-            message = `${products.length} products found.`;
+            message = `${products.length} products found teste.`;
             
-            return sendResponse({res, success: true, statusCode: 200, message: message, data: products});
+            return sendResponse({
+                res, 
+                success: true, 
+                statusCode: 200, 
+                message: message, 
+                data: products, 
+                page: page, 
+                nextPage: nextPage ? `/v1/getAll?page=${nextPage}` : null, 
+                prevPage: prevPage ? `/v1/getAll?page=${prevPage}` : null
+            });
         }else{
             message = 'No products registred!'
             sendResponse({res, success: true, statusCode: 404, message: message});

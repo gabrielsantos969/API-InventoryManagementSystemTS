@@ -3,9 +3,14 @@ import con from "../config/connect";
 import Product from "../interface/Product";
 
 interface ProductRow extends RowDataPacket, Omit<Product, 'constructor'> {}
+interface TotalCount extends RowDataPacket {
+    total: number;
+  }
 
-const getAllProducts = async (): Promise<Product[] | null> => {
-    const [rows] = await con.promise().query<ProductRow[]>('SELECT * FROM product');
+const getAllProducts = async (page: number, limitQuery:number): Promise<Product[] | null> => {
+    const limit = limitQuery || 50;
+    const offset = (page - 1) * limit;
+    const [rows] = await con.promise().query<ProductRow[]>('SELECT * FROM product LIMIT ? OFFSET ?', [limit, offset]);
 
     if(rows.length > 0){
         
@@ -20,6 +25,12 @@ const getAllProducts = async (): Promise<Product[] | null> => {
 
     return null
 
+}
+
+const getTotalProducts = async (): Promise<number> => {
+    const [rows] = await con.promise().query<TotalCount[]>('SELECT COUNT(*) as total FROM product');
+    const { total } = rows[0];
+    return total;
 }
 
 const getProductById = async (id: number): Promise<Product[] | null> => {
@@ -124,4 +135,4 @@ const deleteProduct = async (id: number): Promise<void> => {
 
 }
 
-export { getAllProducts, getProductById, getProductByCode, getProductByName, createProduct, updateProduct, deleteProduct, Product }; 
+export { getAllProducts, getProductById, getProductByCode, getProductByName, createProduct, updateProduct, deleteProduct, getTotalProducts, Product }; 
