@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import sendResponse from "../utils/sendResponse";
-import { createProduct, deleteProduct, getAllProducts, getProductByCode, getProductById, updateProduct } from "../models/productModel";
+import { createProduct, deleteProduct, getAllProducts, getProductByCode, getProductById, getProductByName, updateProduct } from "../models/productModel";
 
 async function getProducts(req: Request, res: Response): Promise<void> {
   
@@ -146,6 +146,58 @@ async function getProductCode(req:Request, res:Response) {
             error: errorMessage
         })
         
+
+    }
+
+}
+
+async function getProductName(req:Request, res: Response) {
+    
+    let message;
+    const {
+        name
+    } = req.params;
+
+    try {
+
+        const product = await getProductByName(name);
+
+        if(product){
+            message = `Product Name: '${name}' found.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 200,
+                message: message,
+                data: product
+            })
+        }else{
+            message = `Product Name: '${name}' not found.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 404,
+                message: message
+            })
+        }
+        
+    } catch (err) {
+        
+        let errorMessage = 'An unknown error occurred';
+
+        if(err instanceof Error){
+            errorMessage = err.message;
+        }
+
+        message = 'Error when trying to list to product by name.'
+
+        sendResponse({
+            res,
+            success: false,
+            statusCode: 500,
+            message: message,
+            error: errorMessage
+        })
 
     }
 
@@ -331,4 +383,4 @@ async function productDelete(req: Request, res: Response) {
 
 }
 
-export { getProducts, getProductId, productCreate, getProductCode, productUpdate, productDelete };
+export { getProducts, getProductId, getProductCode, getProductName, productCreate, productUpdate, productDelete };
