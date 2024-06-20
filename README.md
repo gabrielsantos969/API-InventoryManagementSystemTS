@@ -4,7 +4,7 @@
 
 > This system was created for study purposes and provides an API for a product management system.
 
-## Tools
+## Tools 🛠️
 
 ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
 ![Node](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)
@@ -14,7 +14,7 @@
 ![GitHub](https://img.shields.io/badge/-GitHub-100000?style=flat&logo=github&logoColor=white)
 ![Visual Studio Code](https://img.shields.io/badge/-Visual%20Studio%20Code-333333?style=flat&logo=visual-studio-code&logoColor=007ACC)
 
-## Recommendations
+## Recommendations 💡
 
 It is recommended that you have this project installed on your machine and that it runs correctly:
 
@@ -24,7 +24,7 @@ It is recommended that you have this project installed on your machine and that 
 - git 2.43.0
 - Postman
 
-## Get project
+## Get project 📥
 
 > Open your git bash in a folder of your choice and paste the command below to have the project on your computer.
 
@@ -32,9 +32,9 @@ It is recommended that you have this project installed on your machine and that 
 git clone https://github.com/gabrielsantos969/API-InventoryManagementSystemTS.git
 ```
 
-## Installation & Configuration
+## Installation & Configuration ⚙️
 
-### Installation
+### Installation 📥
 > To start the project, perform the necessary installation with the command below which will install all the resources used in this project.
 
 ```bash
@@ -42,7 +42,7 @@ git clone https://github.com/gabrielsantos969/API-InventoryManagementSystemTS.gi
 ```
 ---
 
-### Configuration
+### Configuration ⚙️
 
 > Configure the port and host to run it in __.env__, if you don't add anything, it comes by default at __PORT=3000__ and __HOST=http://localhost__ in __src/server.ts__.
 
@@ -67,17 +67,17 @@ DB_PORT=
 
 > We separate it to run in two ways, which is as dev and compiled.
 
-### __Running in dev mode__
+### __Running in dev mode__ 🏃‍♂️💨
 ```bash
 npm run dev
 ```
 
-### Compiling project
+### Compiling project 📥
 ```bash
 npm run compile
 ```
 
-### __Running in compiled mode__
+### __Running in compiled mode__ 🏃‍♂️💨
 ```bash
 npm run start
 ```
