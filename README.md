@@ -4,7 +4,7 @@
 
 > This system was created for study purposes and provides an API for a product management system.
 
-## Tools
+## Tools 🛠️
 
 ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
 ![Node](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)
@@ -14,7 +14,7 @@
 ![GitHub](https://img.shields.io/badge/-GitHub-100000?style=flat&logo=github&logoColor=white)
 ![Visual Studio Code](https://img.shields.io/badge/-Visual%20Studio%20Code-333333?style=flat&logo=visual-studio-code&logoColor=007ACC)
 
-## Recommendations
+## Recommendations 
 
 It is recommended that you have this project installed on your machine and that it runs correctly:
 
@@ -24,7 +24,7 @@ It is recommended that you have this project installed on your machine and that 
 - git 2.43.0
 - Postman
 
-## Get project
+## Get project 📥
 
 > Open your git bash in a folder of your choice and paste the command below to have the project on your computer.
 
