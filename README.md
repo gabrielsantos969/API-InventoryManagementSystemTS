@@ -32,6 +32,14 @@ It is recommended that you have this project installed on your machine and that 
 git clone https://github.com/gabrielsantos969/API-InventoryManagementSystemTS.git
 ```
 
+## Contribute to the Project 
+
+> You can contribute to this project at any time with code improvements or necessary implementations.
+>
+>If you don't know how to do it, below is a link to a post on Linkedin that I made, with the aim of showing you step by step how to contribute to any project.
+>
+> 🔗 [How to contribute to a project on Github with Fork and Pull](https://www.linkedin.com/posts/gabriel-santos-b53632196_github-git-tecnologia-activity-7209626258278649856-g_wr?utm_source=share&utm_medium=member_desktop)
+
 ## Installation & Configuration ⚙️
 
 ### Installation 📥
