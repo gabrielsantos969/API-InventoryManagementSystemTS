@@ -67,4 +67,10 @@ const updateStatus = async (id: number, data: Status): Promise<void> => {
 
 } 
 
-export { getAllStatus, getStatusById, createStatus, updateStatus, Status};
+const deleteStatus = async (id: number): Promise<void> => {
+
+    await con.promise().query("DELETE FROM status WHERE id=?", [id]);
+
+}
+
+export { getAllStatus, getStatusById, createStatus, updateStatus, deleteStatus, Status};

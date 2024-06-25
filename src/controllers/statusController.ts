@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createStatus, getAllStatus, getStatusById, updateStatus } from "../models/statusModel";
+import { createStatus, deleteStatus, getAllStatus, getStatusById, updateStatus } from "../models/statusModel";
 import sendResponse from "../utils/sendResponse";
 
 async function getAll(req: Request, res: Response) {
@@ -100,7 +100,7 @@ async function getById(req: Request, res: Response) {
 
 }
 
-async function create(req: Request, res: Response) {
+async function statusCreate(req: Request, res: Response) {
     
     let message;
 
@@ -153,7 +153,7 @@ async function create(req: Request, res: Response) {
 
 }
 
-async function update(req: Request, res: Response) {
+async function statusUpdate(req: Request, res: Response) {
     
     let message;
     const {
@@ -204,4 +204,54 @@ async function update(req: Request, res: Response) {
 
 }
 
-export { getAll, getById, create, update };
+async function statusDelete(req: Request, res: Response) {
+    
+    let message;
+    const {
+        id
+    } = req.params;
+
+    try {
+        
+        const status = await getStatusById(Number(id));
+
+        if(status){
+
+            await deleteStatus(Number(id));
+
+            message = `Status ID: ${id} deleted.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 200,
+                message: message
+            })
+        }else{
+            message = `Status ID: ${id} no resgistred.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode:404,
+                message: message
+            })
+        }
+
+    } catch (err) {
+        let errorMessage = 'An unknown error ocurred!';
+
+        if(err instanceof Error){
+            errorMessage = err.message;
+        }
+
+        message = 'Error when trying to delete status.';
+        sendResponse({
+            res, 
+            success: false,
+            statusCode: 500,
+            message: message,
+            error: errorMessage
+        })
+    }
+}
+
+export { getAll, getById, statusCreate, statusUpdate, statusDelete };
