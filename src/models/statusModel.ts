@@ -37,4 +37,12 @@ const getStatusById = async (id: number): Promise<Status[] | null> => {
 
 }
 
-export { getAllStatus, getStatusById, Status};
+const createStatus = async (data: Status): Promise<void> => {
+
+    const sql = "INSERT INTO status (nm_status) VALUES (?)";
+    const values = [data.nm_status.toUpperCase()];
+    await con.promise().query(sql, values);
+
+}
+
+export { getAllStatus, getStatusById, createStatus, Status};
