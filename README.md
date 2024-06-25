@@ -71,6 +71,16 @@ DB_DATABASE=
 DB_PORT=
 ```
 
+## Database
+
+>[!IMPORTANT]
+>
+> It is recommended that you use MySQL as the database on which the scripts were created based on.
+>
+> Here is the installation link:  [MySQL Installer 8.0.37](https://dev.mysql.com/downloads/installer/ "https://dev.mysql.com/downloads/installer/")
+
+> After installing MySQL and configuring the workbench to be able to use the database, run the scripts that are at the root of the project to have all the tables that the API has, so that it works correctly.
+
 ## Putting it to run 🎉
 
 > We separate it to run in two ways, which is as dev and compiled.
