@@ -16,13 +16,15 @@
 
 ## Recommendations 💡
 
-It is recommended that you have this project installed on your machine and that it runs correctly:
-
-- Mysql 8.0
-- Node 18
-- Visual Studio or another IDE
-- git 2.43.0
-- Postman
+>[!IMPORTANT]
+>
+> It is recommended that you have this project installed on your machine and that it runs correctly:
+>
+> - Mysql 8.0
+> - Node 18
+> - Visual Studio or another IDE
+> - git 2.43.0
+> - Postman
 
 ## Get project 📥
 
