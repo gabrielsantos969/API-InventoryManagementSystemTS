@@ -45,4 +45,26 @@ const createStatus = async (data: Status): Promise<void> => {
 
 }
 
-export { getAllStatus, getStatusById, createStatus, Status};
+const updateStatus = async (id: number, data: Status): Promise<void> => {
+
+    const setClause = [];
+    const values = [];
+
+    if(data.nm_status){
+        setClause.push("nm_status = ?");
+        values.push(data.nm_status.toUpperCase());
+    }
+
+    if(setClause.length === 0){
+        throw new Error("No data was provided to update the status.");
+    }
+
+    const sql = `UPDATE status SET ${setClause.join(", ")} WHERE id=?`;
+
+    values.push(id);
+
+    await con.promise().query(sql, values);
+
+} 
+
+export { getAllStatus, getStatusById, createStatus, updateStatus, Status};

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createStatus, getAllStatus, getStatusById } from "../models/statusModel";
+import { createStatus, getAllStatus, getStatusById, updateStatus } from "../models/statusModel";
 import sendResponse from "../utils/sendResponse";
 
 async function getAll(req: Request, res: Response) {
@@ -153,4 +153,55 @@ async function create(req: Request, res: Response) {
 
 }
 
-export { getAll, getById, create };
+async function update(req: Request, res: Response) {
+    
+    let message;
+    const {
+        id
+    } = req.params;
+
+    try {
+
+        const status = await getStatusById(Number(id));
+
+        if(status){
+
+            await updateStatus(Number(id), req.body);
+
+            message = `Status ID: ${id} updated.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 200,
+                message: message
+            })
+        }else{
+            message = `Status ID: ${id} no resgistred.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode:404,
+                message: message
+            })
+        }
+        
+    } catch (err) {
+        let errorMessage = 'An unknown error ocurred!';
+
+        if(err instanceof Error){
+            errorMessage = err.message;
+        }
+
+        message = 'Error when trying to update status.';
+        sendResponse({
+            res, 
+            success: false,
+            statusCode: 500,
+            message: message,
+            error: errorMessage
+        })
+    }
+
+}
+
+export { getAll, getById, create, update };
