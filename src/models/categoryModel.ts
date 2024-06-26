@@ -4,9 +4,23 @@ import Category from '../interface/Category';
 
 interface CategoryRow extends RowDataPacket, Omit<Category, 'constructor'> {};
 
-const getAllCategories = async (): Promise<Category[] | null> => {
+const getAllCategories = async (filters?: any): Promise<Category[] | null> => {
 
-    const [rows] = await con.promise().query<CategoryRow[]>("SELECT * FROM category");
+    let rows;
+    const setFilter = [];
+    const values = [];
+
+    if(filters.sn_active){
+        setFilter.push("sn_active=?");
+        values.push(filters.sn_active.toUpperCase());
+    }
+
+    if(setFilter.length == 0){
+        [rows] = await con.promise().query<CategoryRow[]>("SELECT * FROM category");
+    }else{
+        [rows] = await con.promise().query<CategoryRow[]>(`SELECT * FROM category WHERE ${setFilter.join(" AND")}`, values);
+    }
+
 
     if(rows.length > 0){
         return rows.map(row => {

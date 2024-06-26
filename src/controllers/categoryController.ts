@@ -8,7 +8,7 @@ async function getAll(req: Request, res: Response) {
 
     try {
 
-        const categories = await getAllCategories();
+        const categories = await getAllCategories(req.query);
 
         if(categories){
             message = `${categories.length} categories found.`;
