@@ -19,4 +19,19 @@ const getAllCategories = async (): Promise<Category[] | null> => {
 
 }
 
-export { getAllCategories, Category };
+const getCategoreById = async (id: number): Promise<Category[] | null> => {
+
+    const [rows] = await con.promise().query<CategoryRow[]>("SELECT * FROM category WHERE id=?", [id]);
+
+    if(rows.length > 0){
+        return rows.map(row => {
+            const category = new Category(row.nm_category, row.sn_active, row.id, row.created_at, row.updated_at);
+            return category;
+        });
+    }
+
+    return null;
+
+}
+
+export { getAllCategories, getCategoreById, Category };
