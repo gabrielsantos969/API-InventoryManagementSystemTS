@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import sendResponse from '../utils/sendResponse';
-import { getAllCategories, getCategoreById } from '../models/categoryModel';
+import { getAllCategories, getCategoreById, updateActiveCategory } from '../models/categoryModel';
 
 async function getAll(req: Request, res: Response) {
     
@@ -98,4 +98,73 @@ async function getById(req: Request, res: Response) {
 
 }
 
-export { getAll, getById };
+async function updateActive(req: Request, res: Response) {
+    
+    let message;
+    const {
+        id
+    } = req.params;
+    const {
+        sn_active
+    } = req.body;
+
+    try {
+
+        const category = await getCategoreById(Number(id));
+
+        if(category){
+
+            if(sn_active == 'S' || sn_active == 's' || sn_active == 'N' || sn_active == 'n'){
+
+                await updateActiveCategory(Number(id), sn_active);
+
+                message = `Category ID: ${id} updated Active for '${sn_active.toUpperCase()}'.`;
+                sendResponse({
+                    res,
+                    success: true,
+                    statusCode: 200,
+                    message: message
+                })
+
+            }else{
+                message = `The value: '${sn_active}' is not accepted, only S or N`;
+                sendResponse({
+                    res,
+                    success: true,
+                    statusCode: 200,
+                    message: message
+                })
+            }
+
+
+        }else{
+            message = `Category ID: ${id} not found.`;
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 404,
+                message: message
+            })
+        }
+        
+    } catch (err) {
+
+        let errorMessage = 'An unknown error occurred';
+        if(err instanceof Error){
+            errorMessage = err.message;
+        }
+
+        message = 'rror when trying to update active category.';
+        sendResponse({
+            res,
+            success: false,
+            statusCode: 500,
+            message: message,
+            error: errorMessage
+        })
+        
+    }
+
+}
+
+export { getAll, getById, updateActive };

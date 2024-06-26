@@ -34,4 +34,11 @@ const getCategoreById = async (id: number): Promise<Category[] | null> => {
 
 }
 
-export { getAllCategories, getCategoreById, Category };
+const updateActiveCategory = async (id: number, sn_active: string): Promise<void> => {
+
+    const values = [sn_active.toUpperCase() , id];
+    await con.promise().query("UPDATE category SET sn_active=? WHERE id=?", values);
+
+}
+
+export { getAllCategories, getCategoreById, updateActiveCategory, Category };
