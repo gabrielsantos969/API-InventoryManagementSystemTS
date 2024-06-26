@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import sendResponse from '../utils/sendResponse';
-import { getAllCategories, getCategoreById, updateActiveCategory } from '../models/categoryModel';
+import { getAllCategories, getCategoryById, updateActiveCategory } from '../models/categoryModel';
 
 async function getAll(req: Request, res: Response) {
     
@@ -58,7 +58,7 @@ async function getById(req: Request, res: Response) {
 
     try {
 
-        const category = await getCategoreById(Number(id));
+        const category = await getCategoryById(Number(id));
 
         if(category){
             message = `Category ID: ${id} found.`;
@@ -110,7 +110,7 @@ async function updateActive(req: Request, res: Response) {
 
     try {
 
-        const category = await getCategoreById(Number(id));
+        const category = await getCategoryById(Number(id));
 
         if(category){
 

@@ -33,7 +33,7 @@ const getAllCategories = async (filters?: any): Promise<Category[] | null> => {
 
 }
 
-const getCategoreById = async (id: number): Promise<Category[] | null> => {
+const getCategoryById = async (id: number): Promise<Category[] | null> => {
 
     const [rows] = await con.promise().query<CategoryRow[]>("SELECT * FROM category WHERE id=?", [id]);
 
@@ -55,4 +55,4 @@ const updateActiveCategory = async (id: number, sn_active: string): Promise<void
 
 }
 
-export { getAllCategories, getCategoreById, updateActiveCategory, Category };
+export { getAllCategories, getCategoryById, updateActiveCategory, Category };

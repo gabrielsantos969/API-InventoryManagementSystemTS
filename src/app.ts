@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import productsRouter from './routes/productRouter';
 import statusRouter from './routes/statusRouter';
 import categoryRouter from './routes/categoryRouter';
+import productCategoriesRouter from './routes/productCategoryRouter'
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use(express.json());
 app.use('/products', productsRouter);
 app.use('/status', statusRouter);
 app.use('/categories', categoryRouter);
+app.use('/categoryProducts', productCategoriesRouter)
 
 export default app;
