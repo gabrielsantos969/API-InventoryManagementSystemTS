@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import sendResponse from "../utils/sendResponse";
-import { createProduct, deleteProduct, getAllProducts, getProductByCode, getProductById, getProductByName, getTotalProducts, updateProduct } from "../models/productModel";
+import { createProduct, deleteProduct, getAllProducts, getProductByCode, getProductById, getProductByName, getTotalProducts, updateCategoriesProduct, updateProduct } from "../models/productModel";
 
 async function getProducts(req: Request, res: Response): Promise<void> {
   
@@ -279,9 +279,10 @@ async function productCreate(req:Request, res:Response) {
 
 async function productUpdate(req: Request, res: Response) {
 
-    let message;
+    let message = '';
     const {
-        data
+        data,
+        categoryIds
     } = req.body;
 
     const {id} = req.params;
@@ -290,17 +291,7 @@ async function productUpdate(req: Request, res: Response) {
 
         const product = await getProductById(Number(id));
 
-        if(product) {
-            await updateProduct(Number(id), data);
-
-            message = `Product ID: ${id} updated.`;
-            sendResponse({
-                res,
-                success: true,
-                statusCode: 200,
-                message: message
-            })
-        }else {
+        if(!product){
             message = `Product ID: ${id} not found.`;
             sendResponse({
                 res, 
@@ -309,6 +300,29 @@ async function productUpdate(req: Request, res: Response) {
                 message: message
             });
         }
+
+        if (!data && !categoryIds) {
+            throw new Error('No data provided to update.');
+        }
+
+        if(data && categoryIds){
+            await updateProduct(Number(id), data);
+            await updateCategoriesProduct(Number(id), categoryIds);
+            message = `Product ID: ${id} updated product and category.`;
+        }else if(categoryIds){
+            await updateCategoriesProduct(Number(id), categoryIds);
+            message = `Product ID: ${id} updated category product.`;
+        }else if(data){
+            await updateProduct(Number(id), data);
+            message = `Product ID: ${id} updated product.`;
+        }
+
+        sendResponse({
+            res,
+            success: true,
+            statusCode: 200,
+            message: message
+          });
 
         
         
