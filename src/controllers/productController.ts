@@ -262,7 +262,7 @@ async function productCreate(req:Request, res:Response) {
                 error: errorMessage
             })
         }else{
-            message = 'Error when trying to list create Product.';
+            message = 'Error when trying to create Product.';
 
             sendResponse({
                 res,

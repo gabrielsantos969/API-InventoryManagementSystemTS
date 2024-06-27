@@ -89,6 +89,13 @@ const getProductByName = async (name:string): Promise<Product[] | null> => {
 
 const createProduct = async (data:Product, categoryIds:number[]): Promise<void> => {
 
+    const [categories]: any = await con.promise().query("SELECT * FROM category WHERE id IN (?)", [categoryIds]);
+    const existingCategoryIds = categories.map((category: any) => category.id);
+
+    if(existingCategoryIds.length !== categoryIds.length){
+        throw new Error('One or more categories do not exist.');
+    }
+
     const values = [data.nm_product, data.cd_product, data.status, data.sku];
     const [result]: any = await con.promise().query("INSERT INTO product (nm_product, cd_product, status, sku) VALUES (?, ?, ?, ?)", values);
 
