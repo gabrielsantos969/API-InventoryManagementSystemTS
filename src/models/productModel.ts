@@ -141,10 +141,36 @@ const updateProduct = async (id:number, data: Product): Promise<void> => {
 
 }
 
+const updateCategoriesProduct = async (id: number, categoryIds: number[]): Promise<void> => {
+
+    const [categories]: any = await con.promise().query("SELECT * FROM category WHERE id IN (?)", [categoryIds]);
+    const existingCategoryIds: number[] = categories.map((category: any) => category.id);
+
+    if(existingCategoryIds.length !== categoryIds.length){
+        throw new Error('One or more categories do not exist'); 
+    }
+
+    const [currentCategories]:any = await con.promise().query("SELECT * FROM product_category WHERE id_product=?", [id]);
+    const currentCategoryIds: number[] = currentCategories.map((category: any) => category.id_category);
+
+    const categoriesToAdd = existingCategoryIds.filter((idCategory: number) => !currentCategoryIds.includes(idCategory));
+    const categoriesToRemove = currentCategoryIds.filter((idCategory: number) => !existingCategoryIds.includes(idCategory));
+
+    if(categoriesToAdd.length > 0){
+        const productCategoriesValuesToAdd = categoriesToAdd.map((categoryId: number) => [id, categoryId]);
+        await con.promise().query("INSERT INTO product_category (id_product, id_category) VALUES ?", [productCategoriesValuesToAdd]);
+    }
+
+    if(categoriesToRemove.length > 0){
+        await con.promise().query("DELETE FROM product_category WHERE id_product=? AND id_category IN (?)", [id, categoriesToRemove])
+    }
+
+}
+
 const deleteProduct = async (id: number): Promise<void> => {
 
     await con.promise().query("DELETE FROM product WHERE id=?", [id]);
 
 }
 
-export { getAllProducts, getProductById, getProductByCode, getProductByName, createProduct, updateProduct, deleteProduct, getTotalProducts, Product }; 
+export { getAllProducts, getProductById, getProductByCode, getProductByName, createProduct, updateProduct, deleteProduct, getTotalProducts, updateCategoriesProduct, Product }; 
