@@ -24,20 +24,15 @@ async function addCategoryProduct(req: Request, res: Response) {
             for(let x:number = 0; x < categoryIds.length; x++){
 
                 const category = await getCategoryById(categoryIds[x]);
-                console.log(category);
-                
 
                 if(category){
                     await addCategoryInProduct(Number(id_product), categoryIds[x]);
                     nmCategoryAdd.push(category[0].nm_category);
                 }else{
-                    console.log('oi');
-                    
                     idCategoryRefused.push(categoryIds[x]);
                 }
 
             }
-            console.log(idCategoryRefused);
             
             if(idCategoryRefused.length > 0 && nmCategoryAdd.length > 0){
                 message = `Categories: ${nmCategoryAdd.join(", ")} adder in product '${product[0].nm_product}' and categories with ID: ${idCategoryRefused.join(", ")} not registered.`
@@ -79,7 +74,6 @@ async function addCategoryProduct(req: Request, res: Response) {
 
         
     } catch (err) {
-        console.error(err);
         
         let errorMessage = 'An unknown error occurred';
         let errorCode:string | undefined;
