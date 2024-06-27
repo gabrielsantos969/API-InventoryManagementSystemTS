@@ -1,8 +1,13 @@
 import User from '../interface/User';
 import con from '../config/connect';
 import { RowDataPacket } from 'mysql2';
+import bcrypt from 'bcrypt';
 
 interface UserRow extends RowDataPacket, Omit<User, 'constructor'> {};
+interface TotalCount extends RowDataPacket {
+    total: number;
+}
+const SALT_ROUNDS = 10;
 
 const getAllUsers = async (page: number, limitQuery: number, filters?: any): Promise<User[] | null> => {
 
@@ -49,6 +54,12 @@ const getAllUsers = async (page: number, limitQuery: number, filters?: any): Pro
 
     return null;
 
+}
+
+const getTotalUsers = async (): Promise<number> => {
+    const [rows] = await con.promise().query<TotalCount[]>("SELECT count(*) FROM users");
+    const { total } = rows[0];
+    return total;
 }
 
 const getUserById = async (id: number): Promise<User[] | null> => {
@@ -124,8 +135,10 @@ const createUser = async (data: User): Promise<void> => {
     if(!data.password || data.password == null || data.password == undefined || data.password.length == 0){
         throw new Error("The 'passsword' field is required.");
     }
+
+    const hashPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
     
-    const values = [data.name, data.username, data.email, data.password, data.birthday];
+    const values = [data.name, data.username, data.email, hashPassword, data.birthday];
 
     await con.promise().query("INSERT INTO users (name, username, email, password, birthday) VALUES (?,?,?,?,?)", [values]);
 
@@ -172,4 +185,30 @@ const deleteUser = async (id: number): Promise<void> => {
 
 }
 
-export { getAllUsers, getUserById, getUserByUsername, getUserByName, getUserByEmail, createUser, updateUser, deleteUser, User};
+const verifyPasswordUser = async (login: any, password: string): Promise<boolean> => {
+
+    const setLoginType = [];
+    const values = [];
+
+    if(login.email){
+        setLoginType.push("email = ?");
+        values.push(login.email);
+    }
+    if(login.username){
+        setLoginType.push("username = ?");
+        values.push(login.username);
+    }
+
+    const [rows]: any = await con.promise().query(`SELECT * FROM users WHERE ${setLoginType.join("OR ")}`, values);
+
+    if(rows.length === 0){
+        throw new Error('User not found');
+    }
+
+    const hashPassword = rows[0].passsword;
+    return await bcrypt.compare(password, hashPassword);
+
+
+}
+
+export { getAllUsers, getTotalUsers, getUserById, getUserByUsername, getUserByName, getUserByEmail, createUser, updateUser, deleteUser, verifyPasswordUser, User};
