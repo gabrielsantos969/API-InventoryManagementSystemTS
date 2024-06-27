@@ -4,17 +4,22 @@ export default class User{
     name: string;
     username: string;
     email: string;
-    password: string;
+    password?: string;
     sn_active?: string;
+    birthday?: Date;
+    created_at?: Date;
+    updated_at?: Date;
 
-    constructor(name: string, username: string, email: string, password: string, sn_active?: string, id?:number){
+    constructor(name: string, username: string, email: string,  sn_active?: string, created_at?: Date, updated_at?: Date, birthday?: Date, id?:number){
 
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
-        this.password = password;
         this.sn_active = sn_active;
+        this.birthday = birthday;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
 
     }
 
