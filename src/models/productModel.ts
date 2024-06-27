@@ -87,10 +87,15 @@ const getProductByName = async (name:string): Promise<Product[] | null> => {
 
 } 
 
-const createProduct = async (data:Product): Promise<void> => {
+const createProduct = async (data:Product, categoryIds:number[]): Promise<void> => {
 
     const values = [data.nm_product, data.cd_product, data.status, data.sku];
-    await con.promise().query("INSERT INTO product (nm_product, cd_product, status, sku) VALUES (?, ?, ?, ?)", values);
+    const [result]: any = await con.promise().query("INSERT INTO product (nm_product, cd_product, status, sku) VALUES (?, ?, ?, ?)", values);
+
+    const productId = result.insertId;
+
+    const productCategoryValues = categoryIds.map((categoryId: number) => [productId, categoryId]);
+    await con.promise().query("INSERT INTO product_category (id_product, id_category) VALUES ?", [productCategoryValues]);
 
 }
 

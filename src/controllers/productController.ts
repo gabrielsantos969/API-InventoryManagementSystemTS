@@ -223,12 +223,13 @@ async function productCreate(req:Request, res:Response) {
     
     let message;
     const {
-        data
+        data,
+        categoryIds
     } = req.body;
 
     try {
 
-        await createProduct(data);
+        await createProduct(data, categoryIds);
 
         message = `Product: ${data.nm_product} registred successfully!`;
         sendResponse({
