@@ -6,11 +6,11 @@ export default class User{
     email: string;
     password?: string;
     sn_active?: string;
-    birthday?: Date;
+    birthday?: string | undefined;
     created_at?: Date;
     updated_at?: Date;
 
-    constructor(name: string, username: string, email: string,  sn_active?: string, created_at?: Date, updated_at?: Date, birthday?: Date, id?:number){
+    constructor(name: string, username: string, email: string,  sn_active?: string, created_at?: Date, updated_at?: Date, birthday?: string, id?:number){
 
         this.id = id;
         this.name = name;
