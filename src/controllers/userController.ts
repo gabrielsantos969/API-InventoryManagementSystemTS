@@ -289,8 +289,7 @@ async function create(req: Request, res: Response) {
                 statusCode: 422,
                 message: message
             })
-        }
-        if(!data.email || data.email == null || data.email == undefined || data.email.length == 0){
+        }else if(!data.email || data.email == null || data.email == undefined || data.email.length == 0){
             message = "The 'email' field is required.";
             sendResponse({
                 res,
@@ -298,8 +297,7 @@ async function create(req: Request, res: Response) {
                 statusCode: 422,
                 message: message
             })
-        }
-        if(!data.username || data.username == null || data.username == undefined || data.username.length == 0){
+        }else if(!data.username || data.username == null || data.username == undefined || data.username.length == 0){
             message = "The 'username' field is required.";
             sendResponse({
                 res,
@@ -307,8 +305,7 @@ async function create(req: Request, res: Response) {
                 statusCode: 422,
                 message: message
             })
-        }
-        if(!data.password || data.password == null || data.password == undefined || data.password.length == 0){
+        }else if(!data.password || data.password == null || data.password == undefined || data.password.length == 0){
             message = "The 'passsword' field is required.";
             sendResponse({
                 res,
@@ -316,8 +313,7 @@ async function create(req: Request, res: Response) {
                 statusCode: 422,
                 message: message
             })
-        }
-        if(emailRegex.test(data.email)){
+        }else if(!emailRegex.test(data.email)){
             message = "Enter a valid email address";
             sendResponse({
                 res,
@@ -325,18 +321,19 @@ async function create(req: Request, res: Response) {
                 statusCode: 422,
                 message: message
             })
+        }else{
+
+            await createUser(data);
+            
+            message = 'User created successfully!'        
+            sendResponse({
+                res,
+                success: true,
+                statusCode: 201,
+                message: message
+            })
+
         }
-
-        await createUser(data);
-
-        message = 'User created successfully!'        
-        sendResponse({
-            res,
-            success: true,
-            statusCode: 201,
-            message: message
-        })
-        
         
     } catch (err) {
         
@@ -499,4 +496,4 @@ async function userDelete(req: Request, res: Response) {
 
 }
 
-export { getAll, getById, getByName, getByUsername, getByEmail, create };
+export { getAll, getById, getByName, getByUsername, getByEmail, create, update, deleteUser };
