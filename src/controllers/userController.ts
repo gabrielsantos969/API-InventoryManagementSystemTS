@@ -13,7 +13,8 @@ async function getAll(req: Request, res: Response) {
         const users = await getAllUsers(page, limit, req.query);
 
         const total = await getTotalUsers();
-        const totalPages = (total / limit);
+        
+        const totalPages = Math.ceil(total / limit);
 
         const nextPage = page < totalPages ? page + 1 : null;
         const prevPage = page > 1 ? page - 1 : null;
