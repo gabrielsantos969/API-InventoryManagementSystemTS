@@ -497,4 +497,4 @@ async function userDelete(req: Request, res: Response) {
 
 }
 
-export { getAll, getById, getByName, getByUsername, getByEmail, create, update, deleteUser };
+export { getAll, getById, getByName, getByUsername, getByEmail, create, update, userDelete };

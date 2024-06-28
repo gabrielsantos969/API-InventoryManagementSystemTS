@@ -82,7 +82,7 @@ const getUserById = async (id: number): Promise<User[] | null> => {
 
 const getUserByUsername = async (username: string): Promise<User[] | null> => {
 
-    const [rows] = await con.promise().query<UserRow[]>(`SELECT * users WHERE username LIKE '%${username}%'`);
+    const [rows] = await con.promise().query<UserRow[]>(`SELECT * FROM users WHERE username LIKE '%${username}%'`);
 
     if(rows.length > 0){
         return rows.map(row => {
@@ -97,7 +97,7 @@ const getUserByUsername = async (username: string): Promise<User[] | null> => {
 
 const getUserByName = async (name: string): Promise<User[] | null> => {
 
-    const [rows] = await con.promise().query<UserRow[]>(`SELECT * users WHERE name LIKE '%${name}%'`);
+    const [rows] = await con.promise().query<UserRow[]>(`SELECT * FROM users WHERE name LIKE '%${name}%'`);
 
     if(rows.length > 0){
         return rows.map(row => {
