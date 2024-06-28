@@ -2,6 +2,7 @@ import User from '../interface/User';
 import con from '../config/connect';
 import { RowDataPacket } from 'mysql2';
 import bcrypt from 'bcrypt';
+import { formatDateForBr, formatDateForMySQL } from '../utils/formatDate';
 
 interface UserRow extends RowDataPacket, Omit<User, 'constructor'> {};
 interface TotalCount extends RowDataPacket {
@@ -19,35 +20,37 @@ const getAllUsers = async (page: number, limitQuery: number, filters?: any): Pro
     const values = [];
 
     if(filters.name){
-        setFilters.push('name = ?');
-        values.push(filters.name);
+        setFilters.push(`name LIKE '%${filters.name}%'`);
     }
 
     if(filters.username){
-        setFilters.push('username = ?');
-        values.push(filters.username);
+        setFilters.push(`username  LIKE '%${filters.username}%'`);
     }
 
     if(filters.email){
-        setFilters.push('email = ?');
-        values.push(filters.email);
+        setFilters.push(`email LIKE '%${filters.email}%'`);
     }
 
     if(filters.birthday){
         setFilters.push('birthday = ?');
-        values.push(filters.birthday);
+        values.push(formatDateForMySQL(filters.birthday));
     }
 
-    if(setFilters.length > 0){
-        [rows] = await con.promise().query<UserRow[]>(`SELECT * FROM users  WHERE ${setFilters.join("AND")} LIMIT ? OFFSET ?`, [values, limit, offset]);
-    }else{
+    if(setFilters.length > 0 && values.length > 0){
+        [rows] = await con.promise().query<UserRow[]>(`SELECT * FROM users  WHERE ${setFilters.join("AND ")} LIMIT ? OFFSET ?`, [values, limit, offset]);
+    }else if(setFilters.length > 0 && values.length == 0){
+        [rows] = await con.promise().query<UserRow[]>(`SELECT * FROM users  WHERE ${setFilters.join("AND ")} LIMIT ? OFFSET ?`, [limit, offset]);
+    }
+    else{
         [rows] = await con.promise().query<UserRow[]>("SELECT * FROM users LIMIT ? OFFSET ?", [limit, offset]);
     }
 
 
     if(rows.length > 0){
         return rows.map(row => {
-            const user = new User(row.name, row.username, row.email, row.sn_active, row.created_at, row.updated_at, row.birthday, row.id);
+            const birthday = row.birthday ? new Date(row.birthday) : undefined;
+            const formattedBirthday = birthday ? formatDateForBr(birthday) : undefined;
+            const user = new User(row.name, row.username, row.email, row.sn_active, row.created_at, row.updated_at, formattedBirthday, row.id);
             return user;
         })
     }
@@ -57,7 +60,7 @@ const getAllUsers = async (page: number, limitQuery: number, filters?: any): Pro
 }
 
 const getTotalUsers = async (): Promise<number> => {
-    const [rows] = await con.promise().query<TotalCount[]>("SELECT count(*) FROM users");
+    const [rows] = await con.promise().query<TotalCount[]>("SELECT count(*) as total FROM users");
     const { total } = rows[0];
     return total;
 }
@@ -123,24 +126,38 @@ const getUserByEmail = async (email: string): Promise<User[] | null> => {
 
 const createUser = async (data: User): Promise<void> => {
 
-    if(!data.name || data.name == null || data.name == undefined || data.name.length == 0){
-        throw new Error("The 'name' field is required.");
+    const setClause = [];
+    const setParams = [];
+    const values = [];
+
+    if(data.name){
+        setClause.push("name");
+        setParams.push("?");
+        values.push(data.name);
     }
-    if(!data.email || data.email == null || data.email == undefined || data.email.length == 0){
-        throw new Error("The 'email' field is required.");
+    if(data.email){
+        setClause.push("email");
+        setParams.push("?");
+        values.push(data.email);
     }
-    if(!data.username || data.username == null || data.username == undefined || data.username.length == 0){
-        throw new Error("The 'username' field is required.");
+    if(data.username){
+        setClause.push("username");
+        setParams.push("?");
+        values.push(data.username);
     }
-    if(!data.password || data.password == null || data.password == undefined || data.password.length == 0){
-        throw new Error("The 'passsword' field is required.");
+    if(data.password){
+        setClause.push("password");
+        setParams.push("?");
+        const hashPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
+        values.push(hashPassword);
+    }
+    if(data.birthday){
+        setClause.push("birthday");
+        setParams.push("?");
+        values.push(formatDateForMySQL(new Date(data.birthday)));
     }
 
-    const hashPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
-    
-    const values = [data.name, data.username, data.email, hashPassword, data.birthday];
-
-    await con.promise().query("INSERT INTO users (name, username, email, password, birthday) VALUES (?,?,?,?,?)", [values]);
+    await con.promise().query(`INSERT INTO users (${setClause.join(", ")}) VALUES (${setParams.join(",")})`, values);
 
 }
 
